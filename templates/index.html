@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Studio</title>
+
+  <!-- Favicon SVG (Carregado a partir da pasta static) -->
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <meta name="theme-color" content="#0f172a">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="ambient-background"></div>
+
+  <main class="container">
+    <header class="header">
+      <div class="badge">Ferramenta Studio</div>
+      <h1>QR Studio<span>.</span></h1>
+      <p class="subtitle">Gere códigos QR personalizados com acabamento profissional.</p>
+    </header>
+
+    <nav class="tabs-container">
+      <div class="tab-glider" id="tab-glider"></div>
+      <button type="button" class="tab-btn active" data-tab="url">Link / Texto</button>
+      <button type="button" class="tab-btn" data-tab="wifi">Wi-Fi</button>
+      <button type="button" class="tab-btn" data-tab="whatsapp">WhatsApp</button>
+      <button type="button" class="tab-btn" data-tab="vcard">vCard</button>
+    </nav>
+
+    <form id="qr-form" enctype="multipart/form-data">
+      <input type="hidden" name="type" id="qr-type-input" value="url">
+
+      <!-- Painel 1: Link -->
+      <div class="tab-panel active" id="panel-url">
+        <div class="input-group">
+          <label for="link-input">Endereço Web ou Texto</label>
+          <input type="text" id="link-input" name="link" placeholder="https://seu-site.com" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Painel 2: Wi-Fi -->
+      <div class="tab-panel" id="panel-wifi">
+        <div class="input-group">
+          <label for="wifi-ssid">Nome da Rede (SSID)</label>
+          <input type="text" id="wifi-ssid" name="wifi_ssid" placeholder="Ex: MinhaRede_5G">
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="wifi-password">Senha</label>
+            <input type="password" id="wifi-password" name="wifi_password" placeholder="••••••••">
+          </div>
+          <div class="input-group">
+            <label for="wifi-security">Segurança</label>
+            <div class="select-wrapper">
+              <select id="wifi-security" name="wifi_security">
+                <option value="WPA">WPA / WPA2 / WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Sem Senha</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel 3: WhatsApp -->
+      <div class="tab-panel" id="panel-whatsapp">
+        <div class="input-group">
+          <label for="wa-phone">Número de Telefone (com DDD)</label>
+          <input type="tel" id="wa-phone" name="wa_phone" placeholder="5581999998888">
+        </div>
+        <div class="input-group">
+          <label for="wa-message">Mensagem Pré-definida (Opcional)</label>
+          <textarea id="wa-message" name="wa_message" rows="2" placeholder="Olá! Gostaria de mais informações."></textarea>
+        </div>
+      </div>
+
+      <!-- Painel 4: vCard -->
+      <div class="tab-panel" id="panel-vcard">
+        <div class="input-row">
+          <div class="input-group">
+            <label for="vcard-name">Nome Completo</label>
+            <input type="text" id="vcard-name" name="vcard_name" placeholder="Ana Silva">
+          </div>
+          <div class="input-group">
+            <label for="vcard-phone">Telefone</label>
+            <input type="tel" id="vcard-phone" name="vcard_phone" placeholder="+55 81 99999-8888">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="vcard-email">E-mail</label>
+            <input type="email" id="vcard-email" name="vcard_email" placeholder="ana@exemplo.com">
+          </div>
+          <div class="input-group">
+            <label for="vcard-org">Empresa / Cargo</label>
+            <input type="text" id="vcard-org" name="vcard_org" placeholder="Design Studio">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span>Personalização Visual</span>
+      </div>
+
+      <div class="options-grid">
+        <div class="color-picker-group">
+          <div class="color-control">
+            <label>Cor do QR Code</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="fill-color" value="#000000">
+              <input type="text" id="fill-color-hex" name="fill_color" value="#000000" maxlength="7">
+            </div>
+          </div>
+
+          <div class="color-control" id="back-color-container">
+            <label>Cor de Fundo</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="back-color" value="#FFFFFF">
+              <input type="text" id="back-color-hex" name="back_color" value="#FFFFFF" maxlength="7">
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox-label" for="transparent-bg">
+            <input type="checkbox" id="transparent-bg" name="transparent_bg" value="true">
+            <span class="custom-checkbox"></span>
+            Fundo Transparente
+          </label>
+        </div>
+
+        <div class="input-group">
+          <label for="module-style">Formato dos Pontos</label>
+          <div class="select-wrapper">
+            <select id="module-style" name="module_style">
+              <option value="square">Quadrados (Padrão)</option>
+              <option value="circle">Bolinhas (Círculos)</option>
+              <option value="rounded">Quadrados Arredondados</option>
+              <option value="gapped">Quadrados Espaçados</option>
+              <option value="vertical">Barras Verticais</option>
+              <option value="horizontal">Barras Horizontais</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="logo-input">Logo Central (Opcional)</label>
+          <div class="file-upload-wrapper">
+            <input type="file" id="logo-input" name="logo" accept="image/png, image/jpeg">
+            <span class="file-custom-label" id="file-label">Escolher arquivo PNG/JPG...</span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="range-header">
+            <label for="box-size">Resolução da Imagem</label>
+            <span id="range-value-display">Médio (10x)</span>
+          </div>
+          <input type="range" id="box-size" name="box_size" min="6" max="20" value="10">
+        </div>
+      </div>
+
+      <button type="submit" id="btn-generate" class="btn-submit">
+        <span class="btn-text">Gerar QR Code</span>
+      </button>
+    </form>
+
+    <section id="result-container" class="result-section hidden">
+      <div class="qr-card">
+        <div class="qr-preview-frame">
+          <img id="qr-image" src="" alt="QR Code Gerado">
+        </div>
+        <div class="action-buttons">
+          <a id="download-btn" download="qrcode.png" class="btn-action primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Baixar PNG
+          </a>
+          <button type="button" id="copy-btn" class="btn-action secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            Copiar Imagem
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
